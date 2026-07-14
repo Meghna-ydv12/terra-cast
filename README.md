@@ -1,37 +1,91 @@
-# TerraCast: Urban Air Quality Forecasting & Anomaly Detection
+<div align="center">
+  <img src="./frontend/public/city_graphic.png" alt="TerraCast Banner" width="100%" />
+  <h1>🌍 TerraCast</h1>
+  <p><strong>An Advanced Machine Learning Framework for Urban Air Quality Forecasting and Anomaly Detection</strong></p>
+</div>
 
-TerraCast is an advanced, hybrid machine learning framework designed to predict Air Quality Index (AQI) and automatically translate complex predictive models into actionable environmental policy briefs for city officials.
+---
 
-## 🚀 Features
-* **Dual-Task Architecture:** Simultaneously predicts the exact AQI numerical value (XGBoost Regression) and classifies the environmental health risk category (Random Forest Classification).
-* **Deterministic Expert System:** Processes mathematical SHAP (Explainable AI) values through a localized rule engine to generate human-readable policy briefs.
-* **Digital Twin Simulator:** An interactive web dashboard allowing urban planners to adjust environmental sliders (e.g., simulating traffic restrictions) and view real-time impact forecasts.
-* **API-Driven Backend:** Fully decoupled Python FastAPI backend serving a responsive React/Vite frontend.
+## 📌 Problem Statement
+Rapid urbanization has led to severe air quality degradation across major metropolitan areas. However, existing air quality forecasting models often act as "black boxes" that struggle to predict sudden pollution anomalies or explain their underlying causes. This makes it nearly impossible for city officials and urban planners to formulate actionable, real-time environmental interventions.
+
+## 🎯 Project Objective
+To develop a hybrid **Dual-Task machine learning framework (Regression + Classification)** enhanced by a **Deterministic Expert System**. TerraCast aims to accurately forecast the Air Quality Index (AQI) and automatically translate SHAP-based feature importance into natural language policy briefs within an interactive "Digital Twin" simulator. 
+
+---
+
+## 🚀 Research Gaps Addressed
+
+Based on extensive literature reviews, TerraCast directly solves 5 critical gaps in modern Air Quality Machine Learning research:
+
+| Gap Identified | Limitations in Existing Research | The TerraCast Solution |
+| :--- | :--- | :--- |
+| **The "Black-Box" Problem** | Highly accurate Deep Learning models lack interpretability. Explanations (like SHAP graphs) are mathematically complex and unusable by non-technical officials. | Integrates a **Deterministic Expert System** to seamlessly translate mathematical SHAP values into readable Natural Language policy briefs. |
+| **Lack of Real-Time "What-If" Simulation** | Most models focus entirely on offline, static predictions rather than dynamic intervention testing. | Features an interactive **"Scenario Lab" UI** where policymakers can adjust environmental sliders for instant predictive feedback. |
+| **Single-Task Evaluation Limitations** | Studies focus either purely on numerical forecasting (Regression) or risk categorization (Classification), but rarely both. | Employs a **Dual-Task architecture** that runs XGBoost Regression (AQI Value) and Random Forest Classification (Health Risk) simultaneously. |
+| **"Threshold Ignorance"** | Advanced models often focus exclusively on predicting PM2.5, ignoring other primary pollutants necessary for calculating a true AQI. | Built as an aggregated model that factors in all primary pollutants (**PM2.5, PM10, NO2, SO2, CO, O3**) and meteorology. |
+| **Lack of API Deployment** | Research models frequently remain stuck in local Jupyter Notebooks without scalable integration architectures. | Engineered with a fully decoupled **Python FastAPI backend and React frontend**, ensuring enterprise-grade cloud scalability. |
+
+---
 
 ## 🛠️ Technology Stack
-* **Frontend:** React, Vite, TailwindCSS, Recharts, Lucide-React
-* **Backend:** Python, FastAPI, Pandas, Scikit-Learn, XGBoost, SHAP
-* **Dataset:** Beijing Multi-Site Air-Quality Data Set (UCI Machine Learning Repository)
 
-## ⚙️ Installation & Setup
+**Frontend Architecture (Digital Twin & Scenario Lab)**
+* **Framework:** React.js + Vite
+* **Styling:** TailwindCSS 
+* **Data Visualization:** Recharts, Lucide-React
+* **State Management:** React Context API & React Query
 
-### 1. Backend Setup
+**Backend Architecture (ML Inference API)**
+* **Framework:** Python FastAPI
+* **Machine Learning:** Scikit-Learn, XGBoost, Pandas
+* **Explainable AI:** SHAP (SHapley Additive exPlanations)
+* **Heuristics:** Custom Python-based Deterministic Expert System
+
+**Dataset**
+* **Source:** Beijing Multi-Site Air-Quality Data Set (UCI Machine Learning Repository)
+* **Size:** 420,768 records with 18 temporal and environmental attributes.
+
+---
+
+## 📊 Core Features
+
+1. **Live Air Map Dashboard:** A real-time overview panel visualizing current pollution nodes, historical datasets, and meteorological data.
+2. **Dual-Task Inference Engine:** Our backend utilizes an ensemble approach, querying both an `xgboost_regression.pkl` and `rf_classification.pkl` model to provide comprehensive statistical outputs (R² > 0.90, Accuracy > 92%).
+3. **The Scenario Lab:** A dedicated, isolated sandbox environment. Users can drag sliders to artificially lower or raise pollutant metrics (e.g., simulating a 30% drop in traffic emissions) to see the exact predictive outcome.
+4. **Automated Policy Briefs:** The Heuristic Engine evaluates SHAP impact arrays in real-time, instantly generating recommended interventions (e.g., "Mandate dust suppression at major construction sites") based on the dominant polluting variables.
+
+---
+
+## ⚙️ Installation & Local Setup
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Meghna-ydv12/terra-cast.git
+cd terra-cast
+```
+
+### 2. Backend Setup
+Start the FastAPI server, which hosts the Machine Learning models and Expert System.
 ```bash
 cd backend
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
 pip install -r requirements.txt
 python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
+*The backend API will run on `http://localhost:8000`*
 
-### 2. Frontend Setup
+### 3. Frontend Setup
+Start the Vite development server to launch the TerraCast Digital Twin interface.
 ```bash
-cd frontend
+cd ../frontend
 npm install
 npm run dev
 ```
+*The frontend application will run on `http://localhost:5173`*
 
-## 📊 Project Structure
-* `/backend`: Contains the FastAPI application, ML model `.pkl` files, Expert System logic, and SHAP explainer services.
-* `/frontend`: Contains the React UI components, Overview Dashboard, and the Scenario Lab.
-* `/dataset`: Historical CSV data used for the historical snapshot overviews.
+---
+<p align="center">
+  <i>Developed for Urban Environmental Planning & Smart City Integration.</i>
+</p>
