@@ -1,10 +1,4 @@
-<div align="center">
-  <img src="./frontend/public/city_graphic.png" alt="TerraCast Banner" width="100%" />
-  <h1>🌍 TerraCast</h1>
-  <p><strong>An Advanced Machine Learning Framework for Urban Air Quality Forecasting and Anomaly Detection</strong></p>
-</div>
-
----
+# TerraCast: Advanced Machine Learning Framework for Urban Air Quality Forecasting
 
 ## 📌 Problem Statement
 Rapid urbanization has led to severe air quality degradation across major metropolitan areas. However, existing air quality forecasting models often act as "black boxes" that struggle to predict sudden pollution anomalies or explain their underlying causes. This makes it nearly impossible for city officials and urban planners to formulate actionable, real-time environmental interventions.
@@ -51,7 +45,7 @@ Based on extensive literature reviews, TerraCast directly solves 5 critical gaps
 ## 📊 Core Features
 
 1. **Live Air Map Dashboard:** A real-time overview panel visualizing current pollution nodes, historical datasets, and meteorological data.
-2. **Dual-Task Inference Engine:** Our backend utilizes an ensemble approach, querying both an `xgboost_regression.pkl` and `rf_classification.pkl` model to provide comprehensive statistical outputs (R² > 0.90, Accuracy > 92%).
+2. **Dual-Task Inference Engine:** Our backend utilizes an ensemble approach, querying both an `xgboost_regression.pkl` and `rf_classification.pkl` model to provide comprehensive statistical outputs.
 3. **The Scenario Lab:** A dedicated, isolated sandbox environment. Users can drag sliders to artificially lower or raise pollutant metrics (e.g., simulating a 30% drop in traffic emissions) to see the exact predictive outcome.
 4. **Automated Policy Briefs:** The Heuristic Engine evaluates SHAP impact arrays in real-time, instantly generating recommended interventions (e.g., "Mandate dust suppression at major construction sites") based on the dominant polluting variables.
 
@@ -74,7 +68,6 @@ source venv/bin/activate  # On Windows use: venv\Scripts\activate
 pip install -r requirements.txt
 python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
-*The backend API will run on `http://localhost:8000`*
 
 ### 3. Frontend Setup
 Start the Vite development server to launch the TerraCast Digital Twin interface.
@@ -83,9 +76,3 @@ cd ../frontend
 npm install
 npm run dev
 ```
-*The frontend application will run on `http://localhost:5173`*
-
----
-<p align="center">
-  <i>Developed for Urban Environmental Planning & Smart City Integration.</i>
-</p>
