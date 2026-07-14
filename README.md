@@ -76,3 +76,14 @@ cd ../frontend
 npm install
 npm run dev
 ```
+## 📂 Project Structure
+
+```text
+terra-cast/
+├── backend/        # FastAPI backend and ML services
+├── frontend/       # React + Vite frontend
+├── dataset/        # Air quality datasets
+├── models/         # Trained ML models (.pkl)
+├── scripts/        # Data preprocessing and model training
+└── README.md
+```
