@@ -49,6 +49,20 @@ Based on extensive literature reviews, TerraCast directly solves 5 critical gaps
 3. **The Scenario Lab:** A dedicated, isolated sandbox environment. Users can drag sliders to artificially lower or raise pollutant metrics (e.g., simulating a 30% drop in traffic emissions) to see the exact predictive outcome.
 4. **Automated Policy Briefs:** The Heuristic Engine evaluates SHAP impact arrays in real-time, instantly generating recommended interventions (e.g., "Mandate dust suppression at major construction sites") based on the dominant polluting variables.
 
+## 📂 Project Structure
+
+```text
+terra-cast/
+├── backend/
+│   ├── app/            # FastAPI backend and ML Expert services
+│   ├── dataset/        # Air quality datasets (CSV files)
+│   ├── models/         # Trained ML models (.pkl)
+│   ├── scripts/        # Data preprocessing and model training scripts
+│   └── requirements.txt
+├── frontend/           # React + Vite frontend (Scenario Lab & UI)
+└── README.md           # Project documentation
+```
+
 ---
 
 ## ⚙️ Installation & Local Setup
