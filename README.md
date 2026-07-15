@@ -1,10 +1,10 @@
-# TerraCast: Advanced Machine Learning Framework for Urban Air Quality Forecasting
+# TerraCast: Integrated Machine Learning Pipeline for Urban Air Quality Forecasting
 
 ## 📌 Problem Statement
 Rapid urbanization has led to severe air quality degradation across major metropolitan areas. However, existing air quality forecasting models often act as "black boxes" that struggle to predict sudden pollution anomalies or explain their underlying causes. This makes it nearly impossible for city officials and urban planners to formulate actionable, real-time environmental interventions.
 
 ## 🎯 Project Objective
-To develop a hybrid **Dual-Task machine learning framework (Regression + Classification)** enhanced by a **Deterministic Expert System**. TerraCast aims to accurately forecast the Air Quality Index (AQI) and automatically translate SHAP-based feature importance into natural language policy briefs within an interactive "Digital Twin" simulator. 
+To develop a **Dual-Task machine learning framework (Regression + Classification)** enhanced by a **Rule-Based Recommendation Engine**. TerraCast aims to accurately forecast the Air Quality Index (AQI) and automatically translate SHAP-based feature importance into natural language policy briefs within an **Interactive Scenario Simulator**. 
 
 ---
 
@@ -14,17 +14,17 @@ Based on extensive literature reviews, TerraCast directly solves 5 critical gaps
 
 | Gap Identified | Limitations in Existing Research | The TerraCast Solution |
 | :--- | :--- | :--- |
-| **The "Black-Box" Problem** | Highly accurate Deep Learning models lack interpretability. Explanations (like SHAP graphs) are mathematically complex and unusable by non-technical officials. | Integrates a **Deterministic Expert System** to seamlessly translate mathematical SHAP values into readable Natural Language policy briefs. |
-| **Lack of Real-Time "What-If" Simulation** | Most models focus entirely on offline, static predictions rather than dynamic intervention testing. | Features an interactive **"Scenario Lab" UI** where policymakers can adjust environmental sliders for instant predictive feedback. |
-| **Single-Task Evaluation Limitations** | Studies focus either purely on numerical forecasting (Regression) or risk categorization (Classification), but rarely both. | Employs a **Dual-Task architecture** that runs XGBoost Regression (AQI Value) and Random Forest Classification (Health Risk) simultaneously. |
+| **The "Black-Box" Problem** | Highly accurate Deep Learning models lack interpretability. Explanations (like SHAP graphs) are mathematically complex and unusable by non-technical officials. | Integrates a **Rule-Based Recommendation Engine** to seamlessly translate mathematical SHAP values into readable Natural Language policy briefs. |
+| **Lack of Real-Time "What-If" Simulation** | Most models focus entirely on offline, static predictions rather than dynamic intervention testing. | Features an **Interactive Scenario Simulator UI** where policymakers can adjust environmental sliders for instant predictive feedback. |
+| **Uncertainty Handling in Multi-Task Scenarios** | Studies focus either purely on numerical forecasting (Regression) or risk categorization (Classification), but rarely both. | Employs a **Dual-Task architecture** that runs XGBoost Regression (AQI Value) and Random Forest Classification (Health Risk) simultaneously. |
 | **"Threshold Ignorance"** | Advanced models often focus exclusively on predicting PM2.5, ignoring other primary pollutants necessary for calculating a true AQI. | Built as an aggregated model that factors in all primary pollutants (**PM2.5, PM10, NO2, SO2, CO, O3**) and meteorology. |
-| **Lack of API Deployment** | Research models frequently remain stuck in local Jupyter Notebooks without scalable integration architectures. | Engineered with a fully decoupled **Python FastAPI backend and React frontend**, ensuring enterprise-grade cloud scalability. |
+| **Lack of Automated Real-Time Decision Support** | Research models frequently output predictions without providing rule-based deterministic recommendations for interventions. | Engineered with an integrated rule engine that directly links live inference outputs to actionable environmental policies. |
 
 ---
 
 ## 🛠️ Technology Stack
 
-**Frontend Architecture (Digital Twin & Scenario Lab)**
+**Frontend Architecture (Interactive Scenario Simulator)**
 * **Framework:** React.js + Vite
 * **Styling:** TailwindCSS 
 * **Data Visualization:** Recharts, Lucide-React
@@ -34,7 +34,7 @@ Based on extensive literature reviews, TerraCast directly solves 5 critical gaps
 * **Framework:** Python FastAPI
 * **Machine Learning:** Scikit-Learn, XGBoost, Pandas
 * **Explainable AI:** SHAP (SHapley Additive exPlanations)
-* **Heuristics:** Custom Python-based Deterministic Expert System
+* **Heuristics:** Custom Python-based Rule-Based Recommendation Engine
 
 **Dataset**
 * **Source:** Beijing Multi-Site Air-Quality Data Set (UCI Machine Learning Repository)
@@ -46,8 +46,8 @@ Based on extensive literature reviews, TerraCast directly solves 5 critical gaps
 
 1. **Live Air Map Dashboard:** A real-time overview panel visualizing current pollution nodes, historical datasets, and meteorological data.
 2. **Dual-Task Inference Engine:** Our backend utilizes an ensemble approach, querying both an `xgboost_regression.pkl` and `rf_classification.pkl` model to provide comprehensive statistical outputs.
-3. **The Scenario Lab:** A dedicated, isolated sandbox environment. Users can drag sliders to artificially lower or raise pollutant metrics (e.g., simulating a 30% drop in traffic emissions) to see the exact predictive outcome.
-4. **Automated Policy Briefs:** The Heuristic Engine evaluates SHAP impact arrays in real-time, instantly generating recommended interventions (e.g., "Mandate dust suppression at major construction sites") based on the dominant polluting variables.
+3. **Interactive Scenario Simulator:** A dedicated, isolated sandbox environment. Users can drag sliders to artificially lower or raise pollutant metrics (e.g., simulating a 30% drop in traffic emissions) to see the exact predictive outcome.
+4. **Automated Policy Briefs:** The Rule-Based Recommendation Engine evaluates SHAP impact arrays in real-time, instantly generating recommended interventions (e.g., "Mandate dust suppression at major construction sites") based on the dominant polluting variables.
 
 ## 📂 Project Structure
 
@@ -59,7 +59,7 @@ terra-cast/
 │   ├── models/         # Trained ML models (.pkl)
 │   ├── scripts/        # Data preprocessing and model training scripts
 │   └── requirements.txt
-├── frontend/           # React + Vite frontend (Scenario Lab & UI)
+├── frontend/           # React + Vite frontend (Interactive Scenario Simulator)
 └── README.md           # Project documentation
 ```
 
@@ -84,7 +84,7 @@ python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 ### 3. Frontend Setup
-Start the Vite development server to launch the TerraCast Digital Twin interface.
+Start the Vite development server to launch the TerraCast Interactive Scenario Simulator.
 ```bash
 cd ../frontend
 npm install

@@ -128,7 +128,7 @@ export default function ScenarioLab() {
             <div className="bg-background/80 border border-panel-border rounded-xl p-8 relative flex-1 shadow-inner">
               <div className="absolute top-4 right-4 bg-purple-500/10 border border-purple-500/30 px-3 py-1 rounded-full flex items-center gap-2">
                  <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse"></div>
-                 <span className="text-[9px] font-bold text-purple-400 uppercase tracking-widest">Heuristic Engine</span>
+                 <span className="text-[9px] font-bold text-purple-400 uppercase tracking-widest">Rule Engine</span>
               </div>
               
               <h5 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-6">Expert Intervention Strategy</h5>
