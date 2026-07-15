@@ -17,6 +17,36 @@ def add_bold_paragraph(doc_obj, text_tuples):
             run.bold = True
     return p
 
+def add_hyperlink(paragraph, url, text):
+    """
+    A function that places a clickable hyperlink within a paragraph object.
+    """
+    part = paragraph.part
+    r_id = part.relate_to(url, docx.opc.constants.RELATIONSHIP_TYPE.HYPERLINK, is_external=True)
+
+    hyperlink = docx.oxml.shared.OxmlElement('w:hyperlink')
+    hyperlink.set(docx.oxml.shared.qn('r:id'), r_id)
+
+    new_run = docx.oxml.shared.OxmlElement('w:r')
+    rPr = docx.oxml.shared.OxmlElement('w:rPr')
+    
+    # Add blue color
+    c = docx.oxml.shared.OxmlElement('w:color')
+    c.set(docx.oxml.shared.qn('w:val'), "0000FF")
+    rPr.append(c)
+    
+    # Add single underline
+    u = docx.oxml.shared.OxmlElement('w:u')
+    u.set(docx.oxml.shared.qn('w:val'), 'single')
+    rPr.append(u)
+
+    new_run.append(rPr)
+    new_run.text = text
+    hyperlink.append(new_run)
+    
+    paragraph._p.append(hyperlink)
+    return hyperlink
+
 # 1. Project Title
 doc.add_heading('1. Project Title', level=1)
 doc.add_paragraph('TerraCast: An Integrated Machine Learning Pipeline for Urban Air Quality Forecasting and Anomaly Detection')
@@ -54,29 +84,41 @@ for i, h in enumerate(headers):
     hdr_cells[i].paragraphs[0].runs[0].bold = True
 
 lit_data = [
-    ("Zheng et al. (2015)\nhttps://doi.org/10.1145/2783258", "Beijing AQI", "Co-Training", "Acc = 75%", "Suffers from coarse temporal granularity due to static POI dependency.", "Focuses strictly on dynamic time-series meteorological indicators."),
-    ("Freeman et al. (2018)\nhttps://doi.org/10.1016/j.envpol.2018.01.015", "US EPA", "RNN", "RMSE = 19.1", "Standard RNN architecture suffers from severe vanishing gradient problems on long sequences.", "Utilizes gradient-boosted trees which do not suffer from sequential memory decay."),
-    ("Zhang et al. (2020)\nhttps://doi.org/10.1016/j.atmosres.2020.104928", "Beijing (UCI)", "Random Forest", "R² = 0.85", "Fails to adequately model the non-linear interaction between temperature inversions and PM2.5.", "Employs XGBoost to capture complex non-linear meteorological thresholds."),
-    ("Li et al. (2021)\nhttps://doi.org/10.1109/TNNLS.2021.3084725", "China AQI", "GNN", "R² = 0.91", "High-dimensional graph representations create a strict 'black-box' with no local interpretability.", "Integrates SHAP values over tabular features for exact percentage-based attribution."),
-    ("Wen et al. (2019)\nhttps://doi.org/10.1016/j.scitotenv.2019.05.043", "Beijing (UCI)", "XGBoost", "R² = 0.89", "Static model execution architecture prevents dynamic, real-time intervention testing.", "Engineered with a real-time web UI allowing dynamic parameter adjustments."),
-    ("Du et al. (2021)\nhttps://doi.org/10.1016/j.jclepro.2021.127429", "London AQI", "CNN-LSTM", "RMSE = 15.6", "Convolutional layers overfit on spatial noise when deployed across highly heterogeneous urban zones.", "Uses strict temporal features to avoid spatial feature overfitting."),
-    ("Sharma et al. (2020)\nhttps://doi.org/10.1007/s11869-020-00818-8", "Indian CPCB", "SVM", "Acc = 82%", "Quadratic programming solver in SVM fails to scale efficiently on datasets >100,000 records.", "Ensemble trees scale linearly with large datasets (420k+ records)."),
-    ("Chen et al. (2022)\nhttps://doi.org/10.1016/j.envsoft.2022.105342", "Taiwan EPA", "GRU", "R² = 0.87", "Lacks an independent mechanism to isolate and quantify the impact of exogenous weather variables.", "Implements SHAP to decouple and isolate the impact of individual pollutants."),
-    ("Gu et al. (2021)\nhttps://doi.org/10.1016/j.atmosenv.2021.118365", "Traffic AQI", "MLP", "MAE = 9.8", "MLP activation functions saturate rapidly, causing poor generalization during sudden extreme pollution spikes.", "XGBoost inherently handles extreme outliers through iterative residual boosting."),
-    ("Kumar et al. (2023)\nhttps://doi.org/10.1016/j.envint.2023.107747", "Synthetic AQI", "RF + SMOTE", "F1 = 0.88", "Focuses exclusively on categorical risk output, discarding the underlying quantitative continuous AQI scale.", "Dual-task architecture simultaneously performs regression (continuous) and classification."),
-    ("Patel et al. (2019)\nhttps://doi.org/10.1016/j.atmosenv.2019.04.053", "WHO Global", "SARIMA", "RMSE = 28.5", "Pure auto-regressive statistical models cannot integrate multivariate meteorological exogenous features.", "Machine learning pipeline seamlessly integrates 18 multi-variate features."),
-    ("Wang et al. (2022)\nhttps://doi.org/10.1016/j.scitotenv.2022.154215", "US EPA", "Decision Tree", "R² = 0.76", "Single tree architectures exhibit high variance and are highly susceptible to overfitting on localized training data.", "Employs bagging (Random Forest) and boosting (XGBoost) to severely reduce variance."),
-    ("Zhao et al. (2024)\nhttps://doi.org/10.1016/j.isprsjprs.2024.01.011", "Beijing (UCI)", "XGBoost+SHAP", "R² = 0.88", "Produces uninterpretable raw SHAP arrays, requiring manual data science expertise to extract actionable meaning.", "Pipelines raw SHAP arrays directly into a deterministic Rule Engine for automated text generation."),
-    ("Lee et al. (2023)\nhttps://doi.org/10.1016/j.jenvman.2023.117459", "Seoul AQI", "SD + ML", "RMSE = 14.2", "System Dynamics simulation loops introduce significant computational latency unsuitable for real-time web apps.", "Employs optimized sub-second inference using compiled tree binaries."),
-    ("Kim et al. (2024)\nhttps://doi.org/10.1038/s41598-024-51234-x", "Kaggle AQI", "Ensemble", "R² = 0.90", "Stacked meta-learners destroy feature traceability, rendering post-hoc explainability techniques (like SHAP) invalid.", "Maintains distinct parallel models to ensure 100% mathematical traceability via SHAP.")
+    ("Zheng et al. (2015)\n", "https://doi.org/10.1145/2783258", "Beijing AQI", "Co-Training", "Acc = 75%", "Suffers from coarse temporal granularity due to static POI dependency.", "Focuses strictly on dynamic time-series meteorological indicators."),
+    ("Freeman et al. (2018)\n", "https://doi.org/10.1016/j.envpol.2018.01.015", "US EPA", "RNN", "RMSE = 19.1", "Standard RNN architecture suffers from severe vanishing gradient problems on long sequences.", "Utilizes gradient-boosted trees which do not suffer from sequential memory decay."),
+    ("Zhang et al. (2020)\n", "https://doi.org/10.1016/j.atmosres.2020.104928", "Beijing (UCI)", "Random Forest", "R² = 0.85", "Fails to adequately model the non-linear interaction between temperature inversions and PM2.5.", "Employs XGBoost to capture complex non-linear meteorological thresholds."),
+    ("Li et al. (2021)\n", "https://doi.org/10.1109/TNNLS.2021.3084725", "China AQI", "GNN", "R² = 0.91", "High-dimensional graph representations create a strict 'black-box' with no local interpretability.", "Integrates SHAP values over tabular features for exact percentage-based attribution."),
+    ("Wen et al. (2019)\n", "https://doi.org/10.1016/j.scitotenv.2019.05.043", "Beijing (UCI)", "XGBoost", "R² = 0.89", "Static model execution architecture prevents dynamic, real-time intervention testing.", "Engineered with a real-time web UI allowing dynamic parameter adjustments."),
+    ("Du et al. (2021)\n", "https://doi.org/10.1016/j.jclepro.2021.127429", "London AQI", "CNN-LSTM", "RMSE = 15.6", "Convolutional layers overfit on spatial noise when deployed across highly heterogeneous urban zones.", "Uses strict temporal features to avoid spatial feature overfitting."),
+    ("Sharma et al. (2020)\n", "https://doi.org/10.1007/s11869-020-00818-8", "Indian CPCB", "SVM", "Acc = 82%", "Quadratic programming solver in SVM fails to scale efficiently on datasets >100,000 records.", "Ensemble trees scale linearly with large datasets (420k+ records)."),
+    ("Chen et al. (2022)\n", "https://doi.org/10.1016/j.envsoft.2022.105342", "Taiwan EPA", "GRU", "R² = 0.87", "Lacks an independent mechanism to isolate and quantify the impact of exogenous weather variables.", "Implements SHAP to decouple and isolate the impact of individual pollutants."),
+    ("Gu et al. (2021)\n", "https://doi.org/10.1016/j.atmosenv.2021.118365", "Traffic AQI", "MLP", "MAE = 9.8", "MLP activation functions saturate rapidly, causing poor generalization during sudden extreme pollution spikes.", "XGBoost inherently handles extreme outliers through iterative residual boosting."),
+    ("Kumar et al. (2023)\n", "https://doi.org/10.1016/j.envint.2023.107747", "Synthetic AQI", "RF + SMOTE", "F1 = 0.88", "Focuses exclusively on categorical risk output, discarding the underlying quantitative continuous AQI scale.", "Dual-task architecture simultaneously performs regression (continuous) and classification."),
+    ("Patel et al. (2019)\n", "https://doi.org/10.1016/j.atmosenv.2019.04.053", "WHO Global", "SARIMA", "RMSE = 28.5", "Pure auto-regressive statistical models cannot integrate multivariate meteorological exogenous features.", "Machine learning pipeline seamlessly integrates 18 multi-variate features."),
+    ("Wang et al. (2022)\n", "https://doi.org/10.1016/j.scitotenv.2022.154215", "US EPA", "Decision Tree", "R² = 0.76", "Single tree architectures exhibit high variance and are highly susceptible to overfitting on localized training data.", "Employs bagging (Random Forest) and boosting (XGBoost) to severely reduce variance."),
+    ("Zhao et al. (2024)\n", "https://doi.org/10.1016/j.isprsjprs.2024.01.011", "Beijing (UCI)", "XGBoost+SHAP", "R² = 0.88", "Produces uninterpretable raw SHAP arrays, requiring manual data science expertise to extract actionable meaning.", "Pipelines raw SHAP arrays directly into a deterministic Rule Engine for automated text generation."),
+    ("Lee et al. (2023)\n", "https://doi.org/10.1016/j.jenvman.2023.117459", "Seoul AQI", "SD + ML", "RMSE = 14.2", "System Dynamics simulation loops introduce significant computational latency unsuitable for real-time web apps.", "Employs optimized sub-second inference using compiled tree binaries."),
+    ("Kim et al. (2024)\n", "https://doi.org/10.1038/s41598-024-51234-x", "Kaggle AQI", "Ensemble", "R² = 0.90", "Stacked meta-learners destroy feature traceability, rendering post-hoc explainability techniques (like SHAP) invalid.", "Maintains distinct parallel models to ensure 100% mathematical traceability via SHAP.")
 ]
 
 for row in lit_data:
     row_cells = lit_table.add_row().cells
-    for i, val in enumerate(row):
-        row_cells[i].text = val
-        if i == 3: # Bold the accuracy metric
-            row_cells[i].paragraphs[0].runs[0].bold = True
+    
+    # Custom handler for cell 0 (Reference + Hyperlink)
+    p = row_cells[0].paragraphs[0]
+    p.add_run(row[0])
+    add_hyperlink(p, row[1], row[1])
+    
+    # Fill the rest of the columns
+    row_cells[1].text = row[2]
+    row_cells[2].text = row[3]
+    
+    # Accuracy bolding
+    row_cells[3].text = row[4]
+    row_cells[3].paragraphs[0].runs[0].bold = True
+    
+    row_cells[4].text = row[5]
+    row_cells[5].text = row[6]
 
 doc.add_paragraph()
 
@@ -148,7 +190,10 @@ add_bold_paragraph(doc, [
 # 7. Dataset Information
 doc.add_heading('7. Dataset Information', level=1)
 add_bold_paragraph(doc, [('Dataset Name: ', True), ('Beijing Multi-Site Air-Quality Data Set (UCI Machine Learning Repository)', False)])
-add_bold_paragraph(doc, [('Source URL: ', True), ('https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data+set', False)])
+p_url = doc.add_paragraph()
+p_url.add_run('Source URL: ').bold = True
+add_hyperlink(p_url, 'https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data+set', 'https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data+set')
+
 add_bold_paragraph(doc, [('Size: ', True), ('420,768 records', True)])
 add_bold_paragraph(doc, [('Features: ', True), ('18 attributes ', True), ('(PM2.5, PM10, SO2, NO2, CO, O3, TEMP, PRES, DEWP, RAIN, WSPM, etc.)', False)])
 
@@ -252,9 +297,7 @@ references = [
 for ref_text, link in references:
     p = doc.add_paragraph()
     p.add_run(ref_text)
-    link_run = p.add_run(link)
-    link_run.underline = True
-    link_run.font.color.rgb = RGBColor(0, 0, 255) # Make it look like a blue hyperlink
+    add_hyperlink(p, link, link)
 
-doc.save('TerraCast_Progress_Report_Final_V7.docx')
-print("Successfully generated TerraCast_Progress_Report_Final_V7.docx")
+doc.save('TerraCast_Progress_Report_Final_V6.docx')
+print("Successfully generated TerraCast_Progress_Report_Final_V6.docx")
