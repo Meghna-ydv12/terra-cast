@@ -28,7 +28,7 @@ export default function Sidebar() {
               className={`flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer transition-all ${isOverview ? 'bg-panel border border-panel-border text-cyan shadow-sm' : 'text-slate-400 hover:text-white hover:bg-panel-light'}`}
             >
               <LayoutGrid size={18} />
-              <span className="text-sm font-semibold">Overview & AI</span>
+              <span className="text-sm font-semibold">Overview</span>
             </div>
             <div 
               onClick={() => navigate('/map')}
