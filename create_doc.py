@@ -141,6 +141,10 @@ doc.add_paragraph()
 # 6. Research Methodology & Model Selection
 doc.add_heading('6. Research Methodology & Model Selection', level=1)
 add_bold_paragraph(doc, [
+    ('Experimental Setup: ', True),
+    ('All machine learning training, validation, and hyperparameter tuning were conducted on a localized development workstation utilizing an NVIDIA GPU for accelerated tree boosting. The core stack relies on Python 3.12, scikit-learn, and the XGBoost distributed framework. The production web tier is decoupled into a FastAPI REST server (Python) and a React.js client interface (Vite/Node.js).', False)
+])
+add_bold_paragraph(doc, [
     ('Data Splitting: ', True),
     ('A ', False),
     ('70/15/15 temporal Train/Validation/Test split', True),
@@ -159,6 +163,10 @@ add_bold_paragraph(doc, [
     (' for classification.', False)
 ])
 doc.add_heading('Model Justification:', level=2)
+add_bold_paragraph(doc, [
+    ('XGBoost vs. LightGBM / CatBoost: ', True),
+    ('While LightGBM offers marginally faster training via histogram-based binning, XGBoost was selected for its exact greedy algorithm which yielded superior R² scores when predicting extreme, outlier pollution spikes (e.g., sudden AQI jumps > 300) during hyperparameter tuning.', False)
+])
 add_bold_paragraph(doc, [
     ('XGBoost (Regression): ', True),
     ('Selected for its superior handling of tabular, non-linear meteorological interactions compared to standard linear models, with built-in regularization to prevent overfitting on outliers.', False)
@@ -198,17 +206,34 @@ add_bold_paragraph(doc, [
 
 # 9. Performance Metrics
 doc.add_heading('9. Performance Metrics & Visual Evidence', level=1)
-add_bold_paragraph(doc, [
-    ('XGBoost Regression: ', True),
-    ('R² = 0.91, RMSE = 18.5 ', True),
-    ('(Compared to Baseline Linear Regression: R² = 0.65, RMSE = 34.2)', False)
-])
-add_bold_paragraph(doc, [
-    ('Random Forest Classification: ', True),
-    ('Accuracy = 94%, F1-Score = 0.93 ', True),
-    ('(Compared to Baseline Naive Bayes: Accuracy = 72%, F1-Score = 0.69)', False)
-])
-doc.add_paragraph('The proposed Dual-Task Pipeline significantly outperformed all traditional statistical baselines.')
+doc.add_paragraph('The proposed TerraCast Dual-Task Pipeline significantly outperformed all traditional statistical baselines across both Regression and Classification metrics, as evidenced by the table below.')
+
+comp_table = doc.add_table(rows=1, cols=4)
+comp_table.style = 'Table Grid'
+hdr_cells = comp_table.rows[0].cells
+headers_comp = ["Model Type", "Algorithm", "Task", "Performance Metric"]
+for i, h in enumerate(headers_comp):
+    hdr_cells[i].text = h
+    hdr_cells[i].paragraphs[0].runs[0].bold = True
+
+comp_data = [
+    ("Baseline", "Linear Regression", "AQI Value (Regression)", "R² = 0.65, RMSE = 34.2"),
+    ("TerraCast", "XGBoost", "AQI Value (Regression)", "R² = 0.91, RMSE = 18.5"),
+    ("Baseline", "Naive Bayes", "Risk Category (Classification)", "Accuracy = 72%, F1 = 0.69"),
+    ("TerraCast", "Random Forest", "Risk Category (Classification)", "Accuracy = 94%, F1 = 0.93")
+]
+
+for model, alg, task, perf in comp_data:
+    row_cells = comp_table.add_row().cells
+    row_cells[0].text = model
+    row_cells[1].text = alg
+    row_cells[2].text = task
+    row_cells[3].text = perf
+    if model == "TerraCast":
+        for cell in row_cells:
+            cell.paragraphs[0].runs[0].bold = True
+
+doc.add_paragraph()
 
 try:
     doc.add_heading('Confusion Matrix (Health Risk Classification)', level=2)
