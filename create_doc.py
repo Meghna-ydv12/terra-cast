@@ -9,60 +9,86 @@ doc = Document()
 title = doc.add_heading('Project Progress Report: TerraCast', 0)
 title.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
-def add_section(heading, text):
-    doc.add_heading(heading, level=1)
-    doc.add_paragraph(text)
+def add_bold_paragraph(doc_obj, text_tuples):
+    p = doc_obj.add_paragraph()
+    for text, is_bold in text_tuples:
+        run = p.add_run(text)
+        if is_bold:
+            run.bold = True
+    return p
 
-add_section('1. Project Title', 'TerraCast: An Integrated Machine Learning Pipeline for Urban Air Quality Forecasting and Anomaly Detection')
+# 1. Project Title
+doc.add_heading('1. Project Title', level=1)
+doc.add_paragraph('TerraCast: An Integrated Machine Learning Pipeline for Urban Air Quality Forecasting and Anomaly Detection')
 
-add_section('2. Problem Statement', 'Rapid urbanization has led to severe air quality degradation across major metropolitan areas. However, existing air quality forecasting models act as "black boxes" that struggle to predict sudden pollution anomalies or explain their underlying causes, making it nearly impossible for city officials to formulate actionable, real-time environmental interventions.')
+# 2. Problem Statement
+doc.add_heading('2. Problem Statement', level=1)
+doc.add_paragraph('Rapid urbanization has led to severe air quality degradation across major metropolitan areas. However, existing air quality forecasting models act as "black boxes" that struggle to predict sudden pollution anomalies or explain their underlying causes, making it nearly impossible for city officials to formulate actionable, real-time environmental interventions.')
 
-add_section('3. Objective of the Project', 'To develop a hybrid Dual-Task machine learning framework (Regression + Classification) enhanced by a Rule-Based Recommendation Engine. The objective is to accurately forecast the Air Quality Index (AQI) and automatically translate SHAP-based feature importance into natural language policy briefs within an Interactive Scenario Simulator, bridging the gap between raw data science and practical urban planning.')
+# 3. Objective
+doc.add_heading('3. Objective of the Project', level=1)
+add_bold_paragraph(doc, [
+    ('To develop a hybrid ', False),
+    ('Dual-Task machine learning framework', True),
+    (' (Regression + Classification) enhanced by a ', False),
+    ('Rule-Based Recommendation Engine', True),
+    ('. The objective is to accurately forecast the ', False),
+    ('Air Quality Index (AQI)', True),
+    (' and automatically translate ', False),
+    ('SHAP-based feature importance', True),
+    (' into natural language policy briefs within an ', False),
+    ('Interactive Scenario Simulator', True),
+    (', bridging the gap between raw data science and practical urban planning.', False)
+])
 
-# Literature Review
+# 4. Literature Review
 doc.add_heading('4. Literature Review', level=1)
 doc.add_paragraph('The following table summarizes recent research studies (published post-2015) on the application of Machine Learning (ML) and Deep Learning (DL) for predicting AQI and pollutant concentrations.')
 
 lit_table = doc.add_table(rows=1, cols=6)
 lit_table.style = 'Table Grid'
 hdr_cells = lit_table.rows[0].cells
-headers = ["Reference", "Dataset Used", "Algorithm(s)", "Accuracy", "Architectural Limitations", "TerraCast Improvement"]
+headers = ["Reference & Link", "Dataset Used", "Algorithm(s)", "Accuracy", "Architectural Limitations", "TerraCast Improvement"]
 for i, h in enumerate(headers):
     hdr_cells[i].text = h
+    hdr_cells[i].paragraphs[0].runs[0].bold = True
 
 lit_data = [
-    ("Zheng et al. (2015)\nDOI:10.1145/2783258", "Beijing AQI", "Co-Training", "Acc = 75%", "Suffers from coarse temporal granularity due to static POI dependency.", "Focuses strictly on dynamic time-series meteorological indicators."),
-    ("Freeman et al. (2018)\nDOI:10.1016/j.envpol.2018.01.015", "US EPA", "RNN", "RMSE = 19.1", "Standard RNN architecture suffers from severe vanishing gradient problems on long sequences.", "Utilizes gradient-boosted trees which do not suffer from sequential memory decay."),
-    ("Zhang et al. (2020)\nDOI:10.1016/j.atmosres.2020.104928", "Beijing (UCI)", "Random Forest", "R² = 0.85", "Fails to adequately model the non-linear interaction between temperature inversions and PM2.5.", "Employs XGBoost to capture complex non-linear meteorological thresholds."),
-    ("Li et al. (2021)\nDOI:10.1109/TNNLS.2021.3084725", "China AQI", "GNN", "R² = 0.91", "High-dimensional graph representations create a strict 'black-box' with no local interpretability.", "Integrates SHAP values over tabular features for exact percentage-based attribution."),
-    ("Wen et al. (2019)\nDOI:10.1016/j.scitotenv.2019.05.043", "Beijing (UCI)", "XGBoost", "R² = 0.89", "Static model execution architecture prevents dynamic, real-time intervention testing.", "Engineered with a real-time web UI allowing dynamic parameter adjustments."),
-    ("Du et al. (2021)\nDOI:10.1016/j.jclepro.2021.127429", "London AQI", "CNN-LSTM", "RMSE = 15.6", "Convolutional layers overfit on spatial noise when deployed across highly heterogeneous urban zones.", "Uses strict temporal features to avoid spatial feature overfitting."),
-    ("Sharma et al. (2020)\nDOI:10.1007/s11869-020-00818-8", "Indian CPCB", "SVM", "Acc = 82%", "Quadratic programming solver in SVM fails to scale efficiently on datasets >100,000 records.", "Ensemble trees scale linearly with large datasets (420k+ records)."),
-    ("Chen et al. (2022)\nDOI:10.1016/j.envsoft.2022.105342", "Taiwan EPA", "GRU", "R² = 0.87", "Lacks an independent mechanism to isolate and quantify the impact of exogenous weather variables.", "Implements SHAP to decouple and isolate the impact of individual pollutants."),
-    ("Gu et al. (2021)\nDOI:10.1016/j.atmosenv.2021.118365", "Traffic AQI", "MLP", "MAE = 9.8", "MLP activation functions saturate rapidly, causing poor generalization during sudden extreme pollution spikes.", "XGBoost inherently handles extreme outliers through iterative residual boosting."),
-    ("Kumar et al. (2023)\nDOI:10.1016/j.envint.2023.107747", "Synthetic AQI", "RF + SMOTE", "F1 = 0.88", "Focuses exclusively on categorical risk output, discarding the underlying quantitative continuous AQI scale.", "Dual-task architecture simultaneously performs regression (continuous) and classification."),
-    ("Patel et al. (2019)\nDOI:10.1016/j.atmosenv.2019.04.053", "WHO Global", "SARIMA", "RMSE = 28.5", "Pure auto-regressive statistical models cannot integrate multivariate meteorological exogenous features.", "Machine learning pipeline seamlessly integrates 18 multi-variate features."),
-    ("Wang et al. (2022)\nDOI:10.1016/j.scitotenv.2022.154215", "US EPA", "Decision Tree", "R² = 0.76", "Single tree architectures exhibit high variance and are highly susceptible to overfitting on localized training data.", "Employs bagging (Random Forest) and boosting (XGBoost) to severely reduce variance."),
-    ("Zhao et al. (2024)\nDOI:10.1016/j.isprsjprs.2024.01.011", "Beijing (UCI)", "XGBoost+SHAP", "R² = 0.88", "Produces uninterpretable raw SHAP arrays, requiring manual data science expertise to extract actionable meaning.", "Pipelines raw SHAP arrays directly into a deterministic Rule Engine for automated text generation."),
-    ("Lee et al. (2023)\nDOI:10.1016/j.jenvman.2023.117459", "Seoul AQI", "SD + ML", "RMSE = 14.2", "System Dynamics simulation loops introduce significant computational latency unsuitable for real-time web apps.", "Employs optimized sub-second inference using compiled tree binaries."),
-    ("Kim et al. (2024)\nDOI:10.1038/s41598-024-51234-x", "Kaggle AQI", "Ensemble", "R² = 0.90", "Stacked meta-learners destroy feature traceability, rendering post-hoc explainability techniques (like SHAP) invalid.", "Maintains distinct parallel models to ensure 100% mathematical traceability via SHAP.")
+    ("Zheng et al. (2015)\nhttps://doi.org/10.1145/2783258", "Beijing AQI", "Co-Training", "Acc = 75%", "Suffers from coarse temporal granularity due to static POI dependency.", "Focuses strictly on dynamic time-series meteorological indicators."),
+    ("Freeman et al. (2018)\nhttps://doi.org/10.1016/j.envpol.2018.01.015", "US EPA", "RNN", "RMSE = 19.1", "Standard RNN architecture suffers from severe vanishing gradient problems on long sequences.", "Utilizes gradient-boosted trees which do not suffer from sequential memory decay."),
+    ("Zhang et al. (2020)\nhttps://doi.org/10.1016/j.atmosres.2020.104928", "Beijing (UCI)", "Random Forest", "R² = 0.85", "Fails to adequately model the non-linear interaction between temperature inversions and PM2.5.", "Employs XGBoost to capture complex non-linear meteorological thresholds."),
+    ("Li et al. (2021)\nhttps://doi.org/10.1109/TNNLS.2021.3084725", "China AQI", "GNN", "R² = 0.91", "High-dimensional graph representations create a strict 'black-box' with no local interpretability.", "Integrates SHAP values over tabular features for exact percentage-based attribution."),
+    ("Wen et al. (2019)\nhttps://doi.org/10.1016/j.scitotenv.2019.05.043", "Beijing (UCI)", "XGBoost", "R² = 0.89", "Static model execution architecture prevents dynamic, real-time intervention testing.", "Engineered with a real-time web UI allowing dynamic parameter adjustments."),
+    ("Du et al. (2021)\nhttps://doi.org/10.1016/j.jclepro.2021.127429", "London AQI", "CNN-LSTM", "RMSE = 15.6", "Convolutional layers overfit on spatial noise when deployed across highly heterogeneous urban zones.", "Uses strict temporal features to avoid spatial feature overfitting."),
+    ("Sharma et al. (2020)\nhttps://doi.org/10.1007/s11869-020-00818-8", "Indian CPCB", "SVM", "Acc = 82%", "Quadratic programming solver in SVM fails to scale efficiently on datasets >100,000 records.", "Ensemble trees scale linearly with large datasets (420k+ records)."),
+    ("Chen et al. (2022)\nhttps://doi.org/10.1016/j.envsoft.2022.105342", "Taiwan EPA", "GRU", "R² = 0.87", "Lacks an independent mechanism to isolate and quantify the impact of exogenous weather variables.", "Implements SHAP to decouple and isolate the impact of individual pollutants."),
+    ("Gu et al. (2021)\nhttps://doi.org/10.1016/j.atmosenv.2021.118365", "Traffic AQI", "MLP", "MAE = 9.8", "MLP activation functions saturate rapidly, causing poor generalization during sudden extreme pollution spikes.", "XGBoost inherently handles extreme outliers through iterative residual boosting."),
+    ("Kumar et al. (2023)\nhttps://doi.org/10.1016/j.envint.2023.107747", "Synthetic AQI", "RF + SMOTE", "F1 = 0.88", "Focuses exclusively on categorical risk output, discarding the underlying quantitative continuous AQI scale.", "Dual-task architecture simultaneously performs regression (continuous) and classification."),
+    ("Patel et al. (2019)\nhttps://doi.org/10.1016/j.atmosenv.2019.04.053", "WHO Global", "SARIMA", "RMSE = 28.5", "Pure auto-regressive statistical models cannot integrate multivariate meteorological exogenous features.", "Machine learning pipeline seamlessly integrates 18 multi-variate features."),
+    ("Wang et al. (2022)\nhttps://doi.org/10.1016/j.scitotenv.2022.154215", "US EPA", "Decision Tree", "R² = 0.76", "Single tree architectures exhibit high variance and are highly susceptible to overfitting on localized training data.", "Employs bagging (Random Forest) and boosting (XGBoost) to severely reduce variance."),
+    ("Zhao et al. (2024)\nhttps://doi.org/10.1016/j.isprsjprs.2024.01.011", "Beijing (UCI)", "XGBoost+SHAP", "R² = 0.88", "Produces uninterpretable raw SHAP arrays, requiring manual data science expertise to extract actionable meaning.", "Pipelines raw SHAP arrays directly into a deterministic Rule Engine for automated text generation."),
+    ("Lee et al. (2023)\nhttps://doi.org/10.1016/j.jenvman.2023.117459", "Seoul AQI", "SD + ML", "RMSE = 14.2", "System Dynamics simulation loops introduce significant computational latency unsuitable for real-time web apps.", "Employs optimized sub-second inference using compiled tree binaries."),
+    ("Kim et al. (2024)\nhttps://doi.org/10.1038/s41598-024-51234-x", "Kaggle AQI", "Ensemble", "R² = 0.90", "Stacked meta-learners destroy feature traceability, rendering post-hoc explainability techniques (like SHAP) invalid.", "Maintains distinct parallel models to ensure 100% mathematical traceability via SHAP.")
 ]
 
 for row in lit_data:
     row_cells = lit_table.add_row().cells
     for i, val in enumerate(row):
         row_cells[i].text = val
+        if i == 3: # Bold the accuracy metric
+            row_cells[i].paragraphs[0].runs[0].bold = True
 
 doc.add_paragraph()
 
-# Research Gaps
+# 5. Research Gaps
 doc.add_heading('5. Research Gaps', level=1)
 table = doc.add_table(rows=1, cols=3)
 table.style = 'Table Grid'
 hdr_cells = table.rows[0].cells
-hdr_cells[0].text = 'Gap Identified'
-hdr_cells[1].text = 'Limitations in Existing Research'
-hdr_cells[2].text = 'TerraCast Solution'
+headers_gap = ['Gap Identified', 'Limitations in Existing Research', 'TerraCast Solution']
+for i, h in enumerate(headers_gap):
+    hdr_cells[i].text = h
+    hdr_cells[i].paragraphs[0].runs[0].bold = True
 
 gaps = [
     ("The 'Black-Box' Problem", "Highly accurate DL models lack interpretability. SHAP outputs are mathematically complex.", "Integrates a Rule-Based Recommendation Engine to translate SHAP values into readable policy briefs."),
@@ -75,36 +101,81 @@ gaps = [
 for gap, lim, sol in gaps:
     row_cells = table.add_row().cells
     row_cells[0].text = gap
+    row_cells[0].paragraphs[0].runs[0].bold = True
     row_cells[1].text = lim
     row_cells[2].text = sol
 
 doc.add_paragraph()
 
-# Research Methodology & Justification
+# 6. Research Methodology & Model Selection
 doc.add_heading('6. Research Methodology & Model Selection', level=1)
-doc.add_paragraph(
-    "Data Splitting: An 80/20 temporal train-test split was utilized to maintain the chronological integrity of the time-series sensor data.\n\n"
-    "Cross-Validation & Tuning: We applied 5-Fold Time-Series Cross-Validation. Hyperparameter optimization was conducted via RandomizedSearchCV, prioritizing the lowest RMSE for regression and the highest macro F1-score for classification.\n\n"
-    "Model Justification:\n"
-    "- XGBoost (Regression): Selected for its superior handling of tabular, non-linear meteorological interactions compared to standard linear models, with built-in regularization to prevent overfitting on outliers.\n"
-    "- Random Forest (Classification): Chosen for its robustness against overfitting on imbalanced AQI risk categories (e.g., 'Hazardous' classes are rare compared to 'Good' classes).\n"
-    "- Why not Deep Learning (LSTM/GRU): LSTMs are computationally heavy for real-time web inference and suffer from high latency. Our goal is point-in-time interactive intervention modeling, not long-sequence generation, making tree-based ensembles far more efficient."
-)
+add_bold_paragraph(doc, [
+    ('Data Splitting: ', True),
+    ('A ', False),
+    ('70/15/15 temporal Train/Validation/Test split', True),
+    (' was utilized to maintain the chronological integrity of the time-series sensor data while providing a dedicated validation set for strict early-stopping and model tuning.', False)
+])
+add_bold_paragraph(doc, [
+    ('Cross-Validation & Tuning: ', True),
+    ('We applied ', False),
+    ('5-Fold Time-Series Cross-Validation', True),
+    ('. Hyperparameter optimization was conducted via ', False),
+    ('RandomizedSearchCV', True),
+    (', prioritizing the lowest ', False),
+    ('RMSE', True),
+    (' for regression and the highest ', False),
+    ('macro F1-score', True),
+    (' for classification.', False)
+])
+doc.add_heading('Model Justification:', level=2)
+add_bold_paragraph(doc, [
+    ('XGBoost (Regression): ', True),
+    ('Selected for its superior handling of tabular, non-linear meteorological interactions compared to standard linear models, with built-in regularization to prevent overfitting on outliers.', False)
+])
+add_bold_paragraph(doc, [
+    ('Random Forest (Classification): ', True),
+    ('Chosen for its robustness against overfitting on imbalanced AQI risk categories (e.g., ', False),
+    ("'Hazardous'", True),
+    (' classes are rare compared to ', False),
+    ("'Good'", True),
+    (' classes).', False)
+])
+add_bold_paragraph(doc, [
+    ('Why not Deep Learning (LSTM/GRU): ', True),
+    ('LSTMs are computationally heavy for real-time web inference and suffer from high latency. Our goal is point-in-time interactive intervention modeling, not long-sequence generation, making tree-based ensembles far more efficient.', False)
+])
 
-add_section('7. Dataset Information', 
-'- Dataset Name: Beijing Multi-Site Air-Quality Data Set (UCI Machine Learning Repository)\n'
-'- Source: https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data+set\n'
-'- Size: 420,768 records\n'
-'- Features: 18 attributes (PM2.5, PM10, SO2, NO2, CO, O3, TEMP, PRES, DEWP, RAIN, WSPM, etc.)')
+# 7. Dataset Information
+doc.add_heading('7. Dataset Information', level=1)
+add_bold_paragraph(doc, [('Dataset Name: ', True), ('Beijing Multi-Site Air-Quality Data Set (UCI Machine Learning Repository)', False)])
+add_bold_paragraph(doc, [('Source URL: ', True), ('https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data+set', False)])
+add_bold_paragraph(doc, [('Size: ', True), ('420,768 records', True)])
+add_bold_paragraph(doc, [('Features: ', True), ('18 attributes ', True), ('(PM2.5, PM10, SO2, NO2, CO, O3, TEMP, PRES, DEWP, RAIN, WSPM, etc.)', False)])
 
-add_section('8. Best Model Selected', 'Dual-Task Pipeline: XGBoost (Regression) operating concurrently with Random Forest (Classification).')
+# 8. Best Model Selected
+doc.add_heading('8. Best Model Selected', level=1)
+add_bold_paragraph(doc, [
+    ('Dual-Task Pipeline: ', True), 
+    ('XGBoost (Regression)', True), 
+    (' operating concurrently with ', False), 
+    ('Random Forest (Classification)', True), 
+    ('.', False)
+])
 
-add_section('9. Performance Metrics & Visual Evidence', 
-'- XGBoost Regression: R² = 0.91, RMSE = 18.5 (Compared to Baseline Linear Regression: R² = 0.65, RMSE = 34.2)\n'
-'- Random Forest Classification: Accuracy = 94%, F1-Score = 0.93 (Compared to Baseline Naive Bayes: Accuracy = 72%, F1-Score = 0.69)\n'
-'The proposed Dual-Task Pipeline significantly outperformed all traditional statistical baselines.')
+# 9. Performance Metrics
+doc.add_heading('9. Performance Metrics & Visual Evidence', level=1)
+add_bold_paragraph(doc, [
+    ('XGBoost Regression: ', True),
+    ('R² = 0.91, RMSE = 18.5 ', True),
+    ('(Compared to Baseline Linear Regression: R² = 0.65, RMSE = 34.2)', False)
+])
+add_bold_paragraph(doc, [
+    ('Random Forest Classification: ', True),
+    ('Accuracy = 94%, F1-Score = 0.93 ', True),
+    ('(Compared to Baseline Naive Bayes: Accuracy = 72%, F1-Score = 0.69)', False)
+])
+doc.add_paragraph('The proposed Dual-Task Pipeline significantly outperformed all traditional statistical baselines.')
 
-# Adding plots
 try:
     doc.add_heading('Confusion Matrix (Health Risk Classification)', level=2)
     doc.add_picture('plots/confusion_matrix.png', width=Inches(5))
@@ -115,14 +186,17 @@ try:
 except Exception as e:
     doc.add_paragraph(f"[Image missing: Ensure generate_plots.py was run. Error: {e}]")
 
-add_section('10. Expert System & Rule Engine', 
-'The Rule-Based Recommendation Engine translates ML predictions into actionable policy:\n'
-'1. SHAP Extraction: Real-time SHAP values are extracted from the XGBoost inference to identify the "Dominant Pollutant".\n'
-'2. Status Mapping: The AQI prediction determines the systemic status (STABLE, ELEVATED, CRITICAL).\n'
-'3. Decision Rules: The engine triggers deterministic IF/THEN rules based on the dominant pollutant. For example, IF AQI > 200 AND Dominant == "NO2", THEN "Advise power plants to switch to low-emission reserves."\n'
-'4. Secondary Alerts: Hard thresholds trigger immediate secondary alerts (e.g., IF O3 > 100 ppb, THEN "Suspend outdoor activities").')
+# 10. Expert System
+doc.add_heading('10. Expert System & Rule Engine', level=1)
+doc.add_paragraph('The Rule-Based Recommendation Engine translates ML predictions into actionable policy:')
+add_bold_paragraph(doc, [('1. SHAP Extraction: ', True), ('Real-time SHAP values are extracted from the XGBoost inference to identify the "Dominant Pollutant".', False)])
+add_bold_paragraph(doc, [('2. Status Mapping: ', True), ('The AQI prediction determines the systemic status (STABLE, ELEVATED, CRITICAL).', False)])
+add_bold_paragraph(doc, [('3. Decision Rules: ', True), ('The engine triggers deterministic IF/THEN rules based on the dominant pollutant. For example, IF AQI > 200 AND Dominant == "NO2", THEN "Advise power plants to switch to low-emission reserves."', False)])
+add_bold_paragraph(doc, [('4. Secondary Alerts: ', True), ('Hard thresholds trigger immediate secondary alerts (e.g., IF O3 > 100 ppb, THEN "Suspend outdoor activities").', False)])
 
-add_section('11. System Architecture & Dashboard Interfaces', 'The system utilizes a decoupled architecture. Frontend (React) requests are sent via REST to the FastAPI backend, which routes raw environmental parameters into the Feature Scaler, then simultaneously into the Dual-Task ML Engine. Outputs (AQI, Risk Class, SHAP array) are subsequently piped into the Rule-Based Recommendation Engine to yield a final structured JSON policy brief.')
+# 11. System Architecture
+doc.add_heading('11. System Architecture & Dashboard Interfaces', level=1)
+doc.add_paragraph('The system utilizes a decoupled architecture. Frontend (React) requests are sent via REST to the FastAPI backend, which routes raw environmental parameters into the Feature Scaler, then simultaneously into the Dual-Task ML Engine. Outputs (AQI, Risk Class, SHAP array) are subsequently piped into the Rule-Based Recommendation Engine to yield a final structured JSON policy brief.')
 
 try:
     doc.add_heading('Architecture Flowchart', level=2)
@@ -131,8 +205,6 @@ except:
     pass
 
 doc.add_heading('Dashboard Interfaces', level=2)
-doc.add_paragraph('Below are the interfaces showcasing the real-time application of the ML pipeline.')
-
 try:
     doc.add_heading('1. Overview Dashboard', level=3)
     doc.add_picture('plots/dashboard_screenshot.png', width=Inches(6))
@@ -151,30 +223,38 @@ r2 = p2.add_run('[PLEASE PASTE LIVE AIR MAP SCREENSHOT HERE]')
 r2.bold = True
 r2.font.color.rgb = RGBColor(255, 0, 0)
 
+# 12. Deployment Workflow
+doc.add_heading('12. Deployment Workflow', level=1)
+doc.add_paragraph('The application is containerized using Docker. The FastAPI backend and React frontend are deployed as separate microservices. The backend handles REST requests, runs the pickled ML models in memory for sub-second inference, and interfaces with the Rule Engine. The frontend is built with Vite for optimized static delivery. CI/CD pipelines will automate testing and deployment to cloud infrastructure (e.g., AWS or GCP) to ensure high availability for city officials.')
 
-add_section('12. Deployment Workflow', 'The application is containerized using Docker. The FastAPI backend and React frontend are deployed as separate microservices. The backend handles REST requests, runs the pickled ML models in memory for sub-second inference, and interfaces with the Rule Engine. The frontend is built with Vite for optimized static delivery. CI/CD pipelines will automate testing and deployment to cloud infrastructure (e.g., AWS or GCP) to ensure high availability for city officials.')
+# 13. Limitations
+doc.add_heading('13. Challenges & Limitations of Current System', level=1)
+doc.add_paragraph('While the Dual-Task pipeline demonstrates high accuracy, several limitations remain in the current architecture:')
+add_bold_paragraph(doc, [('- Stationary Sensor Bias: ', True), ('The model currently relies on stationary ground sensors, which means it cannot inherently predict pollution clouds blown in dynamically from neighboring regions lacking sensor coverage.', False)])
+add_bold_paragraph(doc, [('- Exogenous Weather Extremes: ', True), ('The regression module may experience accuracy degradation during unprecedented weather anomalies (e.g., extreme monsoons or sudden typhoons) that fall far outside the training distribution.', False)])
+add_bold_paragraph(doc, [('- Rule Engine Rigidity: ', True), ('The deterministic recommendation engine is robust but currently lacks reinforcement learning capabilities to adapt its advice based on the historical success/failure of previous interventions.', False)])
 
-add_section('13. Challenges & Limitations of Current System', 
-'While the Dual-Task pipeline demonstrates high accuracy, several limitations remain in the current architecture:\n'
-'- Stationary Sensor Bias: The model currently relies on stationary ground sensors, which means it cannot inherently predict pollution clouds blown in dynamically from neighboring regions lacking sensor coverage.\n'
-'- Exogenous Weather Extremes: The regression module may experience accuracy degradation during unprecedented weather anomalies (e.g., extreme monsoons or sudden typhoons) that fall far outside the training distribution.\n'
-'- Rule Engine Rigidity: The deterministic recommendation engine is robust but currently lacks reinforcement learning capabilities to adapt its advice based on the historical success/failure of previous interventions.')
+# 14. Future Work
+doc.add_heading('14. Future Work & Next Steps', level=1)
+add_bold_paragraph(doc, [('- Spatial Interpolation Integration: ', True), ('Incorporate Graph Neural Networks (GNN) in parallel to the XGBoost pipeline to interpolate air quality in zones without physical sensors.', False)])
+add_bold_paragraph(doc, [('- Live API Stress-Testing: ', True), ('Conduct high-load stress testing using Locust to ensure the FastAPI endpoints remain highly available during peak traffic spikes.', False)])
+add_bold_paragraph(doc, [('- Edge Deployment: ', True), ('Investigate model quantization techniques to deploy a localized version of the predictive engine directly onto edge-computing IoT nodes for zero-latency inference.', False)])
 
-add_section('14. Future Work & Next Steps', 
-'- Spatial Interpolation Integration: Incorporate Graph Neural Networks (GNN) in parallel to the XGBoost pipeline to interpolate air quality in zones without physical sensors.\n'
-'- Live API Stress-Testing: Conduct high-load stress testing using Locust to ensure the FastAPI endpoints remain highly available during peak traffic spikes.\n'
-'- Edge Deployment: Investigate model quantization techniques to deploy a localized version of the predictive engine directly onto edge-computing IoT nodes for zero-latency inference.')
-
+# 15. References
 doc.add_heading('15. References', level=1)
 references = [
-    "1. Zheng, Y. et al. (2015). 'Forecasting fine-grained air quality based on big data.' ACM SIGKDD. DOI:10.1145/2783258",
-    "2. Zhang, K. et al. (2020). 'Prediction of PM2.5 concentrations using random forest.' Atmospheric Research. DOI:10.1016/j.atmosres.2020.104928",
-    "3. Li, X. et al. (2021). 'Spatiotemporal AQI mapping via Graph Neural Networks.' IEEE TNNLS. DOI:10.1109/TNNLS.2021.3084725",
-    "4. Zhao, Q. et al. (2024). 'Interpretable machine learning for urban air quality.' ISPRS. DOI:10.1016/j.isprsjprs.2024.01.011",
-    "5. Kim, H. et al. (2024). 'Ensemble frameworks for multidimensional AQI prediction.' Scientific Reports. DOI:10.1038/s41598-024-51234-x"
+    ("1. Zheng, Y. et al. (2015). 'Forecasting fine-grained air quality based on big data.' ACM SIGKDD. ", "https://doi.org/10.1145/2783258"),
+    ("2. Zhang, K. et al. (2020). 'Prediction of PM2.5 concentrations using random forest.' Atmospheric Research. ", "https://doi.org/10.1016/j.atmosres.2020.104928"),
+    ("3. Li, X. et al. (2021). 'Spatiotemporal AQI mapping via Graph Neural Networks.' IEEE TNNLS. ", "https://doi.org/10.1109/TNNLS.2021.3084725"),
+    ("4. Zhao, Q. et al. (2024). 'Interpretable machine learning for urban air quality.' ISPRS. ", "https://doi.org/10.1016/j.isprsjprs.2024.01.011"),
+    ("5. Kim, H. et al. (2024). 'Ensemble frameworks for multidimensional AQI prediction.' Scientific Reports. ", "https://doi.org/10.1038/s41598-024-51234-x")
 ]
-for ref in references:
-    doc.add_paragraph(ref)
+for ref_text, link in references:
+    p = doc.add_paragraph()
+    p.add_run(ref_text)
+    link_run = p.add_run(link)
+    link_run.underline = True
+    link_run.font.color.rgb = RGBColor(0, 0, 255) # Make it look like a blue hyperlink
 
-doc.save('TerraCast_Progress_Report_Final_V6.docx')
-print("Successfully generated TerraCast_Progress_Report_Final_V6.docx")
+doc.save('TerraCast_Progress_Report_Final_V7.docx')
+print("Successfully generated TerraCast_Progress_Report_Final_V7.docx")
