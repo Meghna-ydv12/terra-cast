@@ -67,6 +67,7 @@ gaps = [
     ("The 'Black-Box' Problem", "Highly accurate DL models lack interpretability. SHAP outputs are mathematically complex.", "Integrates a Rule-Based Recommendation Engine to translate SHAP values into readable policy briefs."),
     ("Lack of Real-Time 'What-If' Simulation", "Most models focus entirely on offline, static predictions rather than dynamic intervention testing.", "Features an interactive 'Scenario Simulator' UI for instant predictive feedback."),
     ("Uncertainty Handling in Multi-Task Scenarios", "Studies focus either purely on numerical forecasting (Regression) or risk categorization (Classification).", "Employs a Dual-Task architecture running Regression and Classification simultaneously."),
+    ("'Threshold Ignorance'", "Advanced models often focus exclusively on predicting PM2.5, ignoring other primary pollutants necessary for calculating a true AQI.", "Built as an aggregated model that factors in all primary pollutants (PM2.5, PM10, NO2, SO2, CO, O3) and meteorology."),
     ("Lack of Automated Real-Time Decision Support", "Research models frequently output predictions without providing rule-based deterministic recommendations for interventions.", "Engineered with an integrated rule engine that directly links live inference outputs to actionable policies.")
 ]
 
@@ -127,5 +128,5 @@ try:
 except:
     pass
 
-doc.save('TerraCast_Progress_Report_Final_V3.docx')
-print("Successfully generated TerraCast_Progress_Report_Final_V3.docx")
+doc.save('TerraCast_Progress_Report_Final_V4.docx')
+print("Successfully generated TerraCast_Progress_Report_Final_V4.docx")
