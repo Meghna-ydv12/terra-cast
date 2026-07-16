@@ -218,9 +218,9 @@ for i, h in enumerate(headers_comp):
 
 comp_data = [
     ("Baseline", "Linear Regression", "AQI Value (Regression)", "R² = 0.65, RMSE = 34.2"),
-    ("TerraCast", "XGBoost", "AQI Value (Regression)", "R² = 0.91, RMSE = 18.5"),
+    ("TerraCast", "XGBoost", "AQI Value (Regression)", "R² = 0.93, RMSE = 25.8"),
     ("Baseline", "Naive Bayes", "Risk Category (Classification)", "Accuracy = 72%, F1 = 0.69"),
-    ("TerraCast", "Random Forest", "Risk Category (Classification)", "Accuracy = 94%, F1 = 0.93")
+    ("TerraCast", "Random Forest", "Risk Category (Classification)", "Accuracy = 83%, F1 = 0.83")
 ]
 
 for model, alg, task, perf in comp_data:
