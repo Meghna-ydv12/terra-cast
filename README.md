@@ -1,5 +1,12 @@
 # TerraCast: Integrated Machine Learning Pipeline for Urban Air Quality Forecasting
-
+* **Team Name:** POOKIES
+* **Project Name:** TerraCast
+* **Track:** Smart Cities, Climate & Sustainability
+* **Team Leader:** MEGHNA
+* **Team Members:** 
+  * KOMAL 
+  * KHUSHBU RAJPUT 
+---
 ## 📌 Problem Statement
 Rapid urbanization has led to severe air quality degradation across major metropolitan areas. However, existing air quality forecasting models often act as "black boxes" that struggle to predict sudden pollution anomalies or explain their underlying causes. This makes it nearly impossible for city officials and urban planners to formulate actionable, real-time environmental interventions.
 
