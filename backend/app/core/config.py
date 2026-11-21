@@ -1,8 +1,8 @@
 import os
 from pathlib import Path
 
-# Parse .env file manually
 env_path = Path(__file__).parent.parent.parent / ".env"
+
 if env_path.exists():
     with open(env_path, "r", encoding="utf-8") as f:
         for line in f:
@@ -13,9 +13,12 @@ if env_path.exists():
 class Settings:
     PROJECT_NAME = "TerraCast AI Engine"
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+
+    BASE_DIR = Path(__file__).resolve().parents[2]
+
     MODELS_DIR = os.getenv(
         "MODELS_DIR",
-        r"C:\Users\shash\.gemini\antigravity\scratch\TerraCast\backend\models"
+        str(BASE_DIR / "models")
     )
 
 settings = Settings()
